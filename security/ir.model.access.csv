@@ -1,3 +1,9 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_loan_application_admin,loan.application.admin,motorcycle_financing.model_loan_application,motorcycle_financing.financing_admin,1,1,1,1
 access_loan_application_user,loan.application.user,motorcycle_financing.model_loan_application,motorcycle_financing.financing_user,1,1,1,0
+access_loan_application_tag_admin,loan.application.tag.admin,motorcycle_financing.model_loan_application_tag,base.group_system,1,1,1,1
+access_loan_application_tag_user,loan.application.tag.user,motorcycle_financing.model_loan_application_tag,base.group_user,1,0,0,0
+access_loan_application_document_type_admin,loan.application.document.type.admin,motorcycle_financing.model_loan_application_document_type,base.group_system,1,1,1,1
+access_loan_application_document_type_user,loan.application.document.type.user,motorcycle_financing.model_loan_application_document_type,base.group_user,1,0,0,0
+access_loan_application_document_admin,loan.application.document.admin,motorcycle_financing.model_loan_application_document,motorcycle_financing.financing_admin,1,1,1,1
+access_loan_application_document_user,loan.application.document.user,motorcycle_financing.model_loan_application_document,motorcycle_financing.financing_user,1,1,1,0

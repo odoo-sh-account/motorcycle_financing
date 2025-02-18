@@ -71,6 +71,35 @@ class LoanApplication(models.Model):
         ('cancel', 'Canceled')
     ], string='Status', default='draft', copy=False, required=True)
 
+    # New relational fields
+    document_ids = fields.One2many(
+        'loan.application.document',
+        'application_id',
+        string='Documents'
+    )
+    tag_ids = fields.Many2many(
+        'loan.application.tag',
+        string='Tags'
+    )
+    partner_id = fields.Many2one(
+        'res.partner',
+        string='Customer',
+        required=True
+    )
+    sale_order_id = fields.Many2one(
+        'sale.order',
+        string='Related Sale Order'
+    )
+    user_id = fields.Many2one(
+        'res.users',
+        string='Salesperson',
+        default=lambda self: self.env.user.id
+    )
+    product_template_id = fields.Many2one(
+        'product.template',
+        string='Product'
+    )
+
     def action_send(self):
         self.write({
             'state': 'sent',

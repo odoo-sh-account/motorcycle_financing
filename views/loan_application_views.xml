@@ -33,7 +33,6 @@
         <record id="view_loan_application_list" model="ir.ui.view">
             <field name="name">loan.application.list</field>
             <field name="model">loan.application</field>
-            <field name="type">list</field>
             <field name="arch" type="xml">
                 <list>
                     <field name="name"/>
