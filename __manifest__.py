@@ -1,5 +1,5 @@
 {
-    'name': 'Alejandro - Motorcycle Financing',
+    'name': 'Motorcycle Financing.',
     'version': '18.0.0.0.1',
     'category': 'Kawiil/Custom Modules',
     'license': 'OPL-1',
