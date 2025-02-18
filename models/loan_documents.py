@@ -38,3 +38,15 @@ class LoanApplicationDocument(models.Model):
         ('approved', 'Approved'),
         ('rejected', 'Rejected')
     ], string='Status', default='new', required=True)
+
+    def action_accept(self):
+        """
+        Change the state of the document to 'approved'
+        """
+        self.write({'state': 'approved'})
+
+    def action_reject(self):
+        """
+        Change the state of the document to 'rejected'
+        """
+        self.write({'state': 'rejected'})

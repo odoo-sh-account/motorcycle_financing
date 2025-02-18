@@ -21,6 +21,10 @@
         <field name="arch" type="xml">
             <form string="Document">
                 <header>
+                    <button name="action_accept" string="Accept" type="object" 
+                            class="oe_highlight" invisible="state != 'new'"/>
+                    <button name="action_reject" string="Reject" type="object" 
+                            class="btn-danger" invisible="state != 'new'"/>
                     <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>

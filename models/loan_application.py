@@ -8,11 +8,54 @@ class LoanApplication(models.Model):
         string='Application Number',
         required=True
     )
+    
+    # Related Fields from Sale Order
+    sale_order_id = fields.Many2one(
+        comodel_name='sale.order', 
+        string='Sale Order',
+        required=True
+    )
+    sale_order_total = fields.Monetary(
+        string='Sale Order Total', 
+        related='sale_order_id.amount_total', 
+        readonly=True
+    )
     currency_id = fields.Many2one(
         comodel_name='res.currency',
-        string='Currency',
-        default=lambda self: self.env.company.currency_id.id
+        string='Currency', 
+        related='sale_order_id.currency_id', 
+        readonly=True
     )
+    partner_id = fields.Many2one(
+        comodel_name='res.partner', 
+        string='Customer', 
+        related='sale_order_id.partner_id', 
+        readonly=True
+    )
+    user_id = fields.Many2one(
+        comodel_name='res.users', 
+        string='Salesperson', 
+        related='sale_order_id.user_id', 
+        readonly=True
+    )
+
+    # Computed Fields
+    loan_amount = fields.Monetary(
+        string='Loan Amount',
+        currency_field='currency_id',
+        compute='_compute_loan_amount',
+        store=True,
+        readonly=False
+    )
+    down_payment = fields.Monetary(
+        string='Down Payment',
+        currency_field='currency_id',
+        compute='_compute_loan_amount',
+        store=True,
+        readonly=False
+    )
+    
+    # Other existing fields
     date_application = fields.Date(
         string='Application Date',
         readonly=True,
@@ -33,19 +76,9 @@ class LoanApplication(models.Model):
         readonly=True,
         copy=False
     )
-    down_payment = fields.Monetary(
-        string='Down Payment',
-        currency_field='currency_id',
-        required=True
-    )
     interest_rate = fields.Float(
         string='Interest Rate (%)',
         digits=(5, 2),
-        required=True
-    )
-    loan_amount = fields.Monetary(
-        string='Loan Amount',
-        currency_field='currency_id',
         required=True
     )
     loan_term = fields.Integer(
@@ -71,7 +104,7 @@ class LoanApplication(models.Model):
         ('cancel', 'Canceled')
     ], string='Status', default='draft', copy=False, required=True)
 
-    # New relational fields
+    # Existing relational fields
     document_ids = fields.One2many(
         'loan.application.document',
         'application_id',
@@ -81,25 +114,40 @@ class LoanApplication(models.Model):
         'loan.application.tag',
         string='Tags'
     )
-    partner_id = fields.Many2one(
-        'res.partner',
-        string='Customer',
-        required=True
-    )
-    sale_order_id = fields.Many2one(
-        'sale.order',
-        string='Related Sale Order'
-    )
-    user_id = fields.Many2one(
-        'res.users',
-        string='Salesperson',
-        default=lambda self: self.env.user.id
-    )
     product_template_id = fields.Many2one(
         'product.template',
         string='Product'
     )
 
+    # Document Count Fields
+    document_count = fields.Integer(
+        string='Total Documents', 
+        compute='_compute_document_counts',
+        store=True
+    )
+    document_count_approved = fields.Integer(
+        string='Approved Documents', 
+        compute='_compute_document_counts',
+        store=True
+    )
+
+    @api.depends('sale_order_total', 'loan_amount', 'down_payment')
+    def _compute_loan_amount(self):
+        for record in self:
+            # If loan_amount is not set, calculate it from sale order total and down payment
+            if not record.loan_amount:
+                record.loan_amount = record.sale_order_total - record.down_payment
+            # If loan_amount is set, calculate down_payment
+            elif record.loan_amount:
+                record.down_payment = record.sale_order_total - record.loan_amount
+
+    @api.depends('document_ids', 'document_ids.state')
+    def _compute_document_counts(self):
+        for record in self:
+            record.document_count = len(record.document_ids)
+            record.document_count_approved = len(record.document_ids.filtered(lambda d: d.state == 'approved'))
+
+    # Existing action methods
     def action_send(self):
         self.write({
             'state': 'sent',
