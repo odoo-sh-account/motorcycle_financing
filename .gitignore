@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# Virtual Environment
+venv/
+env/
+ENV/
+
+# IDE specific files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Odoo specific
+*.pot
+*.pyc
+*.pyo
+.settings/
+.project
+.pydevproject
+__pycache__/__init__.cpython-312.pyc
+models/__pycache__/__init__.cpython-312.pyc
+models/__pycache__/loan_application.cpython-312.pyc
