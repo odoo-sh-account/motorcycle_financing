@@ -1,5 +1,9 @@
 {
+<<<<<<< Updated upstream
     'name': 'Motorcycle Financing.',
+=======
+    'name': 'Motorcycle Financing 2.0',
+>>>>>>> Stashed changes
     'version': '18.0.0.0.1',
     'category': 'Kawiil/Custom Modules',
     'license': 'OPL-1',
