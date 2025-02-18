@@ -38,3 +38,4 @@ Thumbs.db
 __pycache__/__init__.cpython-312.pyc
 models/__pycache__/__init__.cpython-312.pyc
 models/__pycache__/loan_application.cpython-312.pyc
+models/__pycache__/loan_application.cpython-312.pyc

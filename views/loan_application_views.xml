@@ -141,5 +141,50 @@
                 </p>
             </field>
         </record>
+
+         <!-- Tag Action -->
+        <record id="action_loan_application_tag" model="ir.actions.act_window">
+            <field name="name">Loan Application Tags</field>
+            <field name="res_model">loan.application.tag</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first loan application tag
+                </p>
+                <p>
+                    Tags help you categorize and organize loan applications
+                </p>
+            </field>
+        </record>
+
+        <!-- Document Action -->
+        <record id="action_loan_application_document" model="ir.actions.act_window">
+            <field name="name">Loan Application Documents</field>
+            <field name="res_model">loan.application.document</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first loan application document
+                </p>
+                <p>
+                    Upload and manage documents for loan applications
+                </p>
+            </field>
+        </record>
+
+        <!-- Document Type Action -->
+        <record id="action_loan_application_document_type" model="ir.actions.act_window">
+            <field name="name">Document Types</field>
+            <field name="res_model">loan.application.document.type</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first document type
+                </p>
+                <p>
+                    Define types of documents required for loan applications
+                </p>
+            </field>
+        </record>
     </data>
 </odoo>

@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.exceptions import ValidationError, UserError
 
 class LoanApplication(models.Model):
     _name = 'loan.application'
@@ -76,6 +77,11 @@ class LoanApplication(models.Model):
         readonly=True,
         copy=False
     )
+    date_sent = fields.Date(
+        string='Sent Date', 
+        readonly=True, 
+        copy=False
+    )
     interest_rate = fields.Float(
         string='Interest Rate (%)',
         digits=(5, 2),
@@ -131,6 +137,12 @@ class LoanApplication(models.Model):
         store=True
     )
 
+    # SQL Constraint for non-negative down payment and loan amount
+    _sql_constraints = [
+        ('non_negative_down_payment', 'CHECK(down_payment >= 0)', 'Down payment cannot be negative.'),
+        ('non_negative_loan_amount', 'CHECK(loan_amount >= 0)', 'Loan amount cannot be negative.')
+    ]
+
     @api.depends('sale_order_total', 'loan_amount', 'down_payment')
     def _compute_loan_amount(self):
         for record in self:
@@ -141,6 +153,15 @@ class LoanApplication(models.Model):
             elif record.loan_amount:
                 record.down_payment = record.sale_order_total - record.loan_amount
 
+    @api.constrains('down_payment')
+    def _check_down_payment(self):
+        """
+        Validate that down payment does not exceed sale order total
+        """
+        for record in self:
+            if record.down_payment > record.sale_order_total:
+                raise ValidationError("Down payment cannot exceed the sale order total.")
+
     @api.depends('document_ids', 'document_ids.state')
     def _compute_document_counts(self):
         for record in self:
@@ -149,25 +170,52 @@ class LoanApplication(models.Model):
 
     # Existing action methods
     def action_send(self):
-        self.write({
-            'state': 'sent',
-            'date_application': fields.Date.today(),
-        })
+        """
+        Send loan application for approval
+        - Requires all documents to be approved
+        - Changes state to 'sent'
+        - Sets sent date
+        """
+        for record in self:
+            # Check if all documents are approved
+            unapproved_docs = record.document_ids.filtered(lambda d: d.state != 'approved')
+            if unapproved_docs:
+                raise UserError("All documents must be approved before sending the application.")
+            
+            # Set state and date
+            record.write({
+                'state': 'sent',
+                'date_sent': fields.Date.today()
+            })
 
     def action_review(self):
         self.write({'state': 'review'})
 
     def action_approve(self):
-        self.write({
-            'state': 'approved',
-            'date_approval': fields.Date.today(),
-        })
+        """
+        Approve loan application
+        - Changes state to 'approved'
+        - Sets approval date
+        """
+        for record in self:
+            record.write({
+                'state': 'approved',
+                'date_approval': fields.Date.today()
+            })
 
-    def action_reject(self):
-        self.write({
-            'state': 'rejected',
-            'date_rejection': fields.Date.today(),
-        })
+    def action_reject(self, rejection_reason=False):
+        """
+        Reject loan application
+        - Changes state to 'rejected'
+        - Sets rejection date
+        - Optionally sets rejection reason
+        """
+        for record in self:
+            record.write({
+                'state': 'rejected',
+                'date_rejection': fields.Date.today(),
+                'rejection_reason': rejection_reason or "No specific reason provided."
+            })
 
     def action_sign(self):
         self.write({
