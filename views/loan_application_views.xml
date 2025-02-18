@@ -39,11 +39,13 @@
                     <field name="sale_order_id"/>
                     <field name="partner_id"/>
                     <field name="date_application"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="loan_amount" sum="Total"/>
                     <field name="down_payment" sum="Total"/>
                     <field name="interest_rate" avg="Average"/>
                     <field name="loan_term"/>
-                    <field name="state" decoration-info="state in ('draft','sent')" 
+                    <field name="state" widget="badge" 
+                           decoration-info="state in ('draft','sent')" 
                            decoration-warning="state == 'review'"
                            decoration-success="state in ('approved','signed')"
                            decoration-danger="state in ('rejected','cancel')"/>
@@ -70,7 +72,8 @@
                                 class="oe_highlight" invisible="state != 'approved'"/>
                         <button name="action_cancel" string="Cancel" type="object" 
                                 invisible="state not in ('draft','sent','review')"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,sent,review,approved,signed"/>
+                        <field name="state" widget="statusbar" 
+                               statusbar_visible="draft,sent,review,approved,rejected,signed"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -78,7 +81,9 @@
                         </div>
                         <div class="oe_title">
                             <h1>
-                                <field name="name" placeholder="Application Number" readonly="state != 'draft'"/>
+                                <field name="name" placeholder="Application Number" 
+                                       readonly="state != 'draft'" 
+                                       options="{'line_breaks': False}"/>
                             </h1>
                         </div>
                         <group>
@@ -88,12 +93,18 @@
                                 <field name="sale_order_total" readonly="1"/>
                                 <field name="partner_id" readonly="1"/>
                                 <field name="user_id" readonly="1"/>
-                                <field name="loan_amount" readonly="state not in ('draft','sent')"/>
-                                <field name="down_payment" readonly="state not in ('draft','sent')"/>
-                                <field name="currency_id" invisible="1"/>
+                                <field name="tag_ids" widget="many2many_tags" 
+                                       options="{'color_field': 'color'}"/>
+                                <field name="loan_amount" 
+                                       widget="monetary" 
+                                       options="{'currency_field': 'currency_id'}"/>
+                                <field name="down_payment" 
+                                       widget="monetary" 
+                                       options="{'currency_field': 'currency_id'}"/>
                             </group>
                             <group>
-                                <field name="interest_rate" readonly="state not in ('draft','sent','review')"/>
+                                <field name="interest_rate" 
+                                       widget="percentage"/>
                                 <field name="loan_term" readonly="state not in ('draft','sent')"/>
                                 <field name="date_approval" invisible="state not in ('approved', 'signed')"/>
                                 <field name="date_signed" invisible="state != 'signed'"/>

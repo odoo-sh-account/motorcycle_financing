@@ -35,9 +35,14 @@
                             <field name="type_id"/>
                         </group>
                         <group>
-                            <field name="attachment"/>
+                            <field name="state" widget="badge"/>
                         </group>
                     </group>
+                    <notebook>
+                        <page string="Attachment" name="attachment">
+                            <field name="attachment" filename="name" widget="binary"/>
+                        </page>
+                    </notebook>
                 </sheet>
             </form>
         </field>
