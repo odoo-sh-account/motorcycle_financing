@@ -1,9 +1,9 @@
 {
-    'name': 'Motorcycle Financing',
+    'name': 'Alejandro - Motorcycle Financing',
     'version': '18.0.0.0.1',
     'category': 'Kawiil/Custom Modules',
     'license': 'OPL-1',
-    'summary': 'Streamlines the loan application process for dealerships.',
+    'summary': 'Streamlines the loan application process for dealerships. Alejandro',
     'description': 'A module to handle motorcycle loan applications, tracking, and management',
     'author': 'Odoo-sh-account',
     'website': 'https://github.com/odoo-sh-account/motorcycle_financing',
