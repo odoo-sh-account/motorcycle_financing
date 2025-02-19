@@ -10,6 +10,12 @@ class LoanApplication(models.Model):
         required=True
     )
     
+    display_name = fields.Char(
+        string='Display Name',
+        compute='_compute_display_name',
+        store=True
+    )
+
     # Related Fields from Sale Order
     sale_order_id = fields.Many2one(
         comodel_name='sale.order', 
@@ -121,8 +127,10 @@ class LoanApplication(models.Model):
         string='Tags'
     )
     product_template_id = fields.Many2one(
-        'product.template',
-        string='Product'
+        comodel_name='product.template',
+        string='Product',
+        compute='_compute_product_template_id',
+        store=True
     )
 
     # Document Count Fields
@@ -153,6 +161,14 @@ class LoanApplication(models.Model):
             elif record.loan_amount:
                 record.down_payment = record.sale_order_total - record.loan_amount
 
+    @api.depends('partner_id.name', 'product_template_id.name')
+    def _compute_display_name(self):
+        for record in self:
+            if record.partner_id and record.product_template_id:
+                record.display_name = f"{record.partner_id.name} - {record.product_template_id.name}"
+            else:
+                record.display_name = record.name
+
     @api.constrains('down_payment')
     def _check_down_payment(self):
         """
@@ -167,6 +183,33 @@ class LoanApplication(models.Model):
         for record in self:
             record.document_count = len(record.document_ids)
             record.document_count_approved = len(record.document_ids.filtered(lambda d: d.state == 'approved'))
+
+    @api.depends('sale_order_id.order_line')
+    def _compute_product_template_id(self):
+        for record in self:
+            if record.sale_order_id and record.sale_order_id.order_line:
+                record.product_template_id = record.sale_order_id.order_line[0].product_template_id
+            else:
+                record.product_template_id = False
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        # Create the loan applications
+        applications = super().create(vals_list)
+        
+        # Get all active document types
+        doc_types = self.env['loan.application.document.type'].search([('active', '=', True)])
+        
+        # Create documents for each application
+        for application in applications:
+            for doc_type in doc_types:
+                self.env['loan.application.document'].create({
+                    'name': f"{doc_type.name} - {application.name}",
+                    'application_id': application.id,
+                    'type_id': doc_type.id,
+                })
+        
+        return applications
 
     # Existing action methods
     def action_send(self):

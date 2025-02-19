@@ -35,7 +35,7 @@
             <field name="model">loan.application</field>
             <field name="arch" type="xml">
                 <list default_order="date_application desc">
-                    <field name="name"/>
+                    <field name="display_name"/>
                     <field name="sale_order_id"/>
                     <field name="partner_id"/>
                     <field name="date_application"/>
@@ -72,8 +72,11 @@
                         </div>
                         <div class="oe_title">
                             <h1>
-                                <field name="name" readonly="state != 'draft'"/>
+                                <field name="display_name" readonly="1"/>
                             </h1>
+                            <h2>
+                                <field name="name" readonly="state != 'draft'"/>
+                            </h2>
                         </div>
                         <group>
                             <group>
