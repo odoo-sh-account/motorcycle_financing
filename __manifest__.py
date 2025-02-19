@@ -24,6 +24,6 @@
         'views/loan_application_document_views.xml',
         'views/loan_application_document_type_views.xml',
         # Menu - Load last after all views and actions are defined
-        'views/motorcycle_financing_menu.xml',
+        'views/menu.xml',
     ],
 }
