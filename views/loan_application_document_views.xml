@@ -15,6 +15,16 @@
                 <field name="application_id"/>
                 <field name="type_id"/>
                 <field name="state" widget="badge"/>
+                <button name="action_approve" 
+                        string="Approve" 
+                        type="object" 
+                        icon="fa-check"
+                        invisible="state != 'new'"/>
+                <button name="action_reject" 
+                        string="Reject" 
+                        type="object"
+                        icon="fa-times"
+                        invisible="state != 'new'"/>
             </list>
         </field>
     </record>
