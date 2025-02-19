@@ -46,12 +46,4 @@
             </p>
         </field>
     </record>
-
-    <!-- Menu Item -->
-    <menuitem id="menu_loan_application_document_type"
-              name="Document Types"
-              parent="motorcycle_financing.menu_configuration"
-              action="action_loan_application_document_type"
-              sequence="30"
-              groups="base.group_system"/>
 </odoo>
