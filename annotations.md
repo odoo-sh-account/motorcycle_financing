@@ -151,4 +151,76 @@ Non-Underscore Methods in Odoo:
     - User and group-based restrictions
     - Configurable through XML security rules
 
+## Security Groups and Menu Visibility
 
+### Problem
+When deploying to Odoo.sh, some menu items were not visible even though the module was installed successfully. Specifically, these menus were missing:
+- Loan Applications
+- Applications
+- Documents
+
+### Root Cause
+The issue was related to user permissions. While the module defines specific security groups:
+- `financing_user` (Motorcycle Financing User)
+- `financing_admin` (Motorcycle Financing Admin)
+
+The user needs to be assigned to these groups to see the corresponding menu items. In local development environments, this might be automatically handled or you might be using a superuser account, but in production environments like Odoo.sh, proper group assignment is required.
+
+### Solution
+Either:
+1. Assign the appropriate security group to the user:
+   - Go to Settings > Users & Companies > Users
+   - Edit the user
+   - Under "Access Rights", find "Motorcycle Financing" category
+   - Assign either "Motorcycle Financing User" or "Motorcycle Financing Admin"
+
+2. Or for testing purposes, enable superuser mode (not recommended for production)
+
+### Best Practices
+1. Always test module installation with a non-admin user to catch permission-related issues early
+2. Document required security groups for each feature
+3. Consider implementing a data file that automatically assigns necessary groups to specified users during module installation
+
+## View Mode Differences Between Odoo CE and EE
+
+### Problem
+When deploying to Odoo.sh (Enterprise Edition 18.0+e) we encountered the error:
+```
+Error: View types not defined tree found in act_window action 394
+```
+while the same code worked fine in local development (Community Edition 18.0-20250207).
+
+### Root Cause
+There's a difference in how view modes are handled between Odoo CE and EE:
+- Community Edition is more lenient and accepts both `tree` and `list` view modes
+- Enterprise Edition is stricter and requires `list` view mode specifically
+
+### Solution
+In action window definitions (`ir.actions.act_window`), always use `list,form` instead of `tree,form` for the `view_mode` field:
+
+```xml
+<record id="action_example" model="ir.actions.act_window">
+    <field name="name">Example Action</field>
+    <field name="res_model">example.model</field>
+    <field name="view_mode">list,form</field>  <!-- Use list, not tree -->
+</record>
+```
+
+This ensures compatibility with both Community and Enterprise editions.
+
+### Note
+While the XML view definition still uses `<tree>` tags, the action's `view_mode` must use `list`:
+```xml
+<!-- In view definition, still use tree -->
+<record id="view_example_tree" model="ir.ui.view">
+    <field name="arch" type="xml">
+        <tree>  <!-- This stays as tree -->
+            <field name="name"/>
+        </tree>
+    </field>
+</record>
+
+<!-- But in action definition, use list -->
+<record id="action_example" model="ir.actions.act_window">
+    <field name="view_mode">list,form</field>  <!-- This must be list -->
+</record>
