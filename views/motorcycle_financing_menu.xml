@@ -6,16 +6,43 @@
         web_icon="motorcycle_financing,static/description/icon.png"
         sequence="10"/>
 
-    <!-- App's Top Menu -->
-    <menuitem id="menu_motorcycle_financing"
-        name="Financing"
+    <!-- Loan Applications Main Menu -->
+    <menuitem id="menu_loan_application_root"
+        name="Loan Applications"
         parent="menu_motorcycle_financing_root"
         sequence="10"/>
 
-    <!-- Loan Applications Menu -->
-    <menuitem id="menu_loan_application"
-        name="Loan Applications"
-        parent="menu_motorcycle_financing"
+    <!-- Loan Applications Submenu -->
+    <menuitem id="menu_loan_applications_list"
+        name="Applications"
+        parent="menu_loan_application_root"
         action="action_loan_application"
+        sequence="10"/>
+
+    <!-- Loan Application Tags Submenu -->
+    <menuitem id="menu_loan_application_tags"
+        name="Tags"
+        parent="menu_loan_application_root"
+        action="action_loan_application_tag"
+        sequence="20"/>
+
+    <!-- Loan Application Documents Submenu -->
+    <menuitem id="menu_loan_application_documents"
+        name="Documents"
+        parent="menu_loan_application_root"
+        action="action_loan_application_document"
+        sequence="30"/>
+
+    <!-- Configuration Menu -->
+    <menuitem id="menu_configuration"
+        name="Configuration"
+        parent="menu_motorcycle_financing_root"
+        sequence="100"/>
+
+    <!-- Document Types Configuration -->
+    <menuitem id="menu_document_types"
+        name="Document Types"
+        parent="menu_configuration"
+        action="action_loan_application_document_type"
         sequence="10"/>
 </odoo>

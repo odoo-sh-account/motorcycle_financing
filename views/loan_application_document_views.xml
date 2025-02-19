@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Tree View -->
+    <record id="view_loan_application_document_tree" model="ir.ui.view">
+        <field name="name">loan.application.document.tree</field>
+        <field name="model">loan.application.document</field>
+        <field name="arch" type="xml">
+            <list string="Documents">
+                <field name="name"/>
+                <field name="application_id"/>
+                <field name="type_id"/>
+                <field name="state" widget="badge" decoration-info="state == 'new'" decoration-success="state == 'approved'" decoration-danger="state == 'rejected'"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="view_loan_application_document_form" model="ir.ui.view">
+        <field name="name">loan.application.document.form</field>
+        <field name="model">loan.application.document</field>
+        <field name="arch" type="xml">
+            <form string="Document">
+                <header>
+                    <button name="action_accept" string="Accept" type="object" 
+                            class="oe_highlight" invisible="state != 'new'"/>
+                    <button name="action_reject" string="Reject" type="object" 
+                            class="btn-danger" invisible="state != 'new'"/>
+                    <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="application_id"/>
+                            <field name="type_id"/>
+                        </group>
+                        <group>
+                            <field name="state" widget="badge"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Attachment" name="attachment">
+                            <field name="attachment" filename="name" widget="binary"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action -->
+    <record id="action_loan_application_document" model="ir.actions.act_window">
+        <field name="name">Documents</field>
+        <field name="res_model">loan.application.document</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create your first document
+            </p>
+        </field>
+    </record>
+
+    <!-- Menu Item -->
+    <menuitem id="menu_loan_application_document"
+              name="Documents"
+              parent="motorcycle_financing.menu_loan_application_root"
+              action="action_loan_application_document"
+              sequence="20"/>
+</odoo>

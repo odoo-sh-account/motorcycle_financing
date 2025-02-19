@@ -33,16 +33,19 @@
         <record id="view_loan_application_list" model="ir.ui.view">
             <field name="name">loan.application.list</field>
             <field name="model">loan.application</field>
-            <field name="type">list</field>
             <field name="arch" type="xml">
                 <list>
                     <field name="name"/>
+                    <field name="sale_order_id"/>
+                    <field name="partner_id"/>
                     <field name="date_application"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="loan_amount" sum="Total"/>
                     <field name="down_payment" sum="Total"/>
                     <field name="interest_rate" avg="Average"/>
                     <field name="loan_term"/>
-                    <field name="state" decoration-info="state in ('draft','sent')" 
+                    <field name="state" widget="badge" 
+                           decoration-info="state in ('draft','sent')" 
                            decoration-warning="state == 'review'"
                            decoration-success="state in ('approved','signed')"
                            decoration-danger="state in ('rejected','cancel')"/>
@@ -69,7 +72,8 @@
                                 class="oe_highlight" invisible="state != 'approved'"/>
                         <button name="action_cancel" string="Cancel" type="object" 
                                 invisible="state not in ('draft','sent','review')"/>
-                        <field name="state" widget="statusbar" statusbar_visible="draft,sent,review,approved,signed"/>
+                        <field name="state" widget="statusbar" 
+                               statusbar_visible="draft,sent,review,approved,rejected,signed"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -77,18 +81,30 @@
                         </div>
                         <div class="oe_title">
                             <h1>
-                                <field name="name" placeholder="Application Number" readonly="state != 'draft'"/>
+                                <field name="name" placeholder="Application Number" 
+                                       readonly="state != 'draft'" 
+                                       options="{'line_breaks': False}"/>
                             </h1>
                         </div>
                         <group>
                             <group>
                                 <field name="date_application"/>
-                                <field name="loan_amount" readonly="state not in ('draft','sent')"/>
-                                <field name="down_payment" readonly="state not in ('draft','sent')"/>
-                                <field name="currency_id" invisible="1"/>
+                                <field name="sale_order_id" required="1"/>
+                                <field name="sale_order_total" readonly="1"/>
+                                <field name="partner_id" readonly="1"/>
+                                <field name="user_id" readonly="1"/>
+                                <field name="tag_ids" widget="many2many_tags" 
+                                       options="{'color_field': 'color'}"/>
+                                <field name="loan_amount" 
+                                       widget="monetary" 
+                                       options="{'currency_field': 'currency_id'}"/>
+                                <field name="down_payment" 
+                                       widget="monetary" 
+                                       options="{'currency_field': 'currency_id'}"/>
                             </group>
                             <group>
-                                <field name="interest_rate" readonly="state not in ('draft','sent','review')"/>
+                                <field name="interest_rate" 
+                                       widget="percentage"/>
                                 <field name="loan_term" readonly="state not in ('draft','sent')"/>
                                 <field name="date_approval" invisible="state not in ('approved', 'signed')"/>
                                 <field name="date_signed" invisible="state != 'signed'"/>
@@ -122,6 +138,51 @@
                 </p>
                 <p>
                     Create loan applications for motorcycle financing.
+                </p>
+            </field>
+        </record>
+
+         <!-- Tag Action -->
+        <record id="action_loan_application_tag" model="ir.actions.act_window">
+            <field name="name">Loan Application Tags</field>
+            <field name="res_model">loan.application.tag</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first loan application tag
+                </p>
+                <p>
+                    Tags help you categorize and organize loan applications
+                </p>
+            </field>
+        </record>
+
+        <!-- Document Action -->
+        <record id="action_loan_application_document" model="ir.actions.act_window">
+            <field name="name">Loan Application Documents</field>
+            <field name="res_model">loan.application.document</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first loan application document
+                </p>
+                <p>
+                    Upload and manage documents for loan applications
+                </p>
+            </field>
+        </record>
+
+        <!-- Document Type Action -->
+        <record id="action_loan_application_document_type" model="ir.actions.act_window">
+            <field name="name">Document Types</field>
+            <field name="res_model">loan.application.document.type</field>
+            <field name="view_mode">tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first document type
+                </p>
+                <p>
+                    Define types of documents required for loan applications
                 </p>
             </field>
         </record>

@@ -12,18 +12,17 @@
     'installable': True,
     'application': True,
     'auto_install': False,
-    'depends': ['base'],
+    'depends': ['base', 'sale'],
     'data': [
         # Security
         'security/motorcycle_financing_groups.xml',
         'security/ir.model.access.csv',
         'security/rules.xml',
-        # Data files
-        'data/loan_demo.xml',
-        # Views and Actions
-        'views/loan_application_views.xml',
-        # Menus
+        # Views - Note: Order matters for proper menu creation
         'views/motorcycle_financing_menu.xml',
+        'views/loan_application_views.xml',
+        'views/loan_application_tag_views.xml',
+        'views/loan_application_document_views.xml',
+        'views/loan_application_document_type_views.xml',
     ],
-    'demo': [],
 }
