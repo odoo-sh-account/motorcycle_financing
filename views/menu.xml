@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Root Menu -->
+    <menuitem id="menu_motorcycle_financing_root"
+              name="Motorcycle Financing"
+              web_icon="motorcycle_financing,static/description/icon.png"
+              sequence="10"/>
+
+    <!-- Main Menu -->
+    <menuitem id="menu_motorcycle_financing_main"
+              name="Loan Applications"
+              parent="menu_motorcycle_financing_root"
+              sequence="10"/>
+
+    <!-- Loan Applications Submenu -->
+    <menuitem id="menu_loan_application"
+              name="Applications"
+              parent="menu_motorcycle_financing_main"
+              action="action_loan_application"
+              sequence="10"/>
+
+    <!-- Tags Submenu -->
+    <menuitem id="menu_loan_application_tag"
+              name="Tags"
+              parent="menu_motorcycle_financing_main"
+              action="action_loan_application_tag"
+              sequence="20"/>
+
+    <!-- Documents Submenu -->
+    <menuitem id="menu_loan_application_document"
+              name="Documents"
+              parent="menu_motorcycle_financing_main"
+              action="action_loan_application_document"
+              sequence="30"/>
+
+    <!-- Configuration Menu -->
+    <menuitem id="menu_motorcycle_financing_config"
+              name="Configuration"
+              parent="menu_motorcycle_financing_root"
+              sequence="100"/>
+
+    <!-- Document Type Menu -->
+    <menuitem id="menu_loan_application_document_type"
+              name="Document Types"
+              parent="menu_motorcycle_financing_config"
+              action="action_loan_application_document_type"
+              sequence="10"/>
+</odoo>

@@ -38,13 +38,13 @@
     <menuitem id="menu_loan_application_configuration"
         name="Configuration"
         parent="menu_motorcycle_financing_root"
-        sequence="100"/>
+        sequence="100"
+        groups="financing_admin"/>
 
     <!-- Document Types Configuration Submenu -->
     <menuitem id="menu_loan_application_document_types"
         name="Document Types"
         parent="menu_loan_application_configuration"
         action="action_loan_application_document_type"
-        sequence="10"
-        groups="base.group_system"/>
+        sequence="10"/>
 </odoo>

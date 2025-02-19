@@ -31,8 +31,10 @@ class LoanApplicationDocumentType(models.Model):
 class LoanApplicationDocument(models.Model):
     _name = 'loan.application.document'
     _description = 'Loan Application Document'
+    _order = 'sequence, id'
 
     name = fields.Char(string='Name', required=True)
+    sequence = fields.Integer(string='Sequence', default=10)
     application_id = fields.Many2one('loan.application', string='Loan Application', required=True)
     attachment = fields.Binary(string='File', required=True)
     type_id = fields.Many2one('loan.application.document.type', string='Document Type', required=True)
@@ -50,10 +52,11 @@ class LoanApplicationDocument(models.Model):
         if self.attachment:
             self.state = 'new'
 
-    def action_accept(self):
+    def action_approve(self):
         """
         Approve the document
         - Changes state to 'approved'
+        - Validates that all other documents are approved
         """
         for record in self:
             # Validate all documents in the application
@@ -65,14 +68,8 @@ class LoanApplicationDocument(models.Model):
             
             record.write({'state': 'approved'})
 
-    def action_reject(self, rejection_reason=False):
+    def action_reject(self):
         """
         Reject the document
-        - Changes state to 'rejected'
         """
-        for record in self:
-            record.write({
-                'state': 'rejected'
-            })
-            # Optionally update the loan application if needed
-            record.application_id.action_reject(rejection_reason)
+        self.write({'state': 'rejected'})

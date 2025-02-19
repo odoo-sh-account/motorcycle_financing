@@ -34,7 +34,7 @@
             <field name="name">loan.application.list</field>
             <field name="model">loan.application</field>
             <field name="arch" type="xml">
-                <list>
+                <list default_order="date_application desc">
                     <field name="name"/>
                     <field name="sale_order_id"/>
                     <field name="partner_id"/>
@@ -60,65 +60,43 @@
             <field name="arch" type="xml">
                 <form>
                     <header>
-                        <button name="action_send" string="Send" type="object" 
-                                class="oe_highlight" invisible="state != 'draft'"/>
-                        <button name="action_review" string="Start Credit Check" type="object" 
-                                class="oe_highlight" invisible="state != 'sent'"/>
-                        <button name="action_approve" string="Approve" type="object" 
-                                class="oe_highlight" invisible="state != 'review'"/>
-                        <button name="action_reject" string="Reject" type="object" 
-                                class="btn-danger" invisible="state != 'review'"/>
-                        <button name="action_sign" string="Sign" type="object" 
-                                class="oe_highlight" invisible="state != 'approved'"/>
-                        <button name="action_cancel" string="Cancel" type="object" 
-                                invisible="state not in ('draft','sent','review')"/>
-                        <field name="state" widget="statusbar" 
-                               statusbar_visible="draft,sent,review,approved,rejected,signed"/>
+                        <button name="action_send" string="Send" type="object" invisible="state in ['approved','signed','rejected','cancel']"/>
+                        <button name="action_approve" string="Approve" type="object" invisible="state not in ['review']"/>
+                        <button name="action_reject" string="Reject" type="object" invisible="state in ['approved','signed','rejected','cancel']"/>
+                        <button name="action_sign" string="Sign" type="object" invisible="state != 'approved'"/>
+                        <button name="action_cancel" string="Cancel" type="object" invisible="state in ['cancel','rejected']"/>
+                        <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <!-- Additional action buttons can be added here -->
                         </div>
                         <div class="oe_title">
                             <h1>
-                                <field name="name" placeholder="Application Number" 
-                                       readonly="state != 'draft'" 
-                                       options="{'line_breaks': False}"/>
+                                <field name="name" readonly="state != 'draft'"/>
                             </h1>
                         </div>
                         <group>
                             <group>
-                                <field name="date_application"/>
-                                <field name="sale_order_id" required="1"/>
-                                <field name="sale_order_total" readonly="1"/>
-                                <field name="partner_id" readonly="1"/>
-                                <field name="user_id" readonly="1"/>
-                                <field name="tag_ids" widget="many2many_tags" 
-                                       options="{'color_field': 'color'}"/>
-                                <field name="loan_amount" 
-                                       widget="monetary" 
-                                       options="{'currency_field': 'currency_id'}"/>
-                                <field name="down_payment" 
-                                       widget="monetary" 
-                                       options="{'currency_field': 'currency_id'}"/>
+                                <field name="partner_id" readonly="state != 'draft'"/>
+                                <field name="sale_order_id" readonly="state != 'draft'"/>
+                                <field name="date_application" readonly="state != 'draft'"/>
+                                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" readonly="state != 'draft'"/>
                             </group>
                             <group>
-                                <field name="interest_rate" 
-                                       widget="percentage"/>
-                                <field name="loan_term" readonly="state not in ('draft','sent')"/>
-                                <field name="date_approval" invisible="state not in ('approved', 'signed')"/>
-                                <field name="date_signed" invisible="state != 'signed'"/>
+                                <field name="loan_amount" readonly="state != 'draft'"/>
+                                <field name="down_payment" readonly="state != 'draft'"/>
+                                <field name="interest_rate" readonly="state != 'draft'"/>
+                                <field name="loan_term" readonly="state != 'draft'"/>
                             </group>
                         </group>
                         <notebook>
-                            <page string="Notes" name="notes">
-                                <field name="notes"/>
-                            </page>
-                            <page string="Rejection" name="rejection" invisible="state != 'rejected'">
-                                <group>
-                                    <field name="date_rejection"/>
-                                    <field name="rejection_reason"/>
-                                </group>
+                            <page string="Documents" name="documents">
+                                <field name="document_ids" context="{'default_application_id': id}">
+                                    <list editable="bottom" decoration-success="state == 'approved'" decoration-muted="state == 'new'" decoration-danger="state == 'rejected'">
+                                        <field name="name"/>
+                                        <field name="state" widget="badge"/>
+                                    </list>
+                                </field>
                             </page>
                         </notebook>
                     </sheet>
