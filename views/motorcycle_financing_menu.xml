@@ -20,11 +20,12 @@
         sequence="10"/>
 
     <!-- Loan Application Tags Submenu -->
-    <menuitem id="menu_loan_application_tags"
+    <menuitem id="menu_loan_application_tag"
         name="Tags"
         parent="menu_loan_application_root"
         action="action_loan_application_tag"
-        sequence="20"/>
+        sequence="20"
+        groups="base.group_system"/>
 
     <!-- Loan Application Documents Submenu -->
     <menuitem id="menu_loan_application_documents"
@@ -34,15 +35,16 @@
         sequence="30"/>
 
     <!-- Configuration Menu -->
-    <menuitem id="menu_configuration"
+    <menuitem id="menu_loan_application_configuration"
         name="Configuration"
         parent="menu_motorcycle_financing_root"
         sequence="100"/>
 
-    <!-- Document Types Configuration -->
-    <menuitem id="menu_document_types"
+    <!-- Document Types Configuration Submenu -->
+    <menuitem id="menu_loan_application_document_types"
         name="Document Types"
-        parent="menu_configuration"
+        parent="menu_loan_application_configuration"
         action="action_loan_application_document_type"
-        sequence="10"/>
+        sequence="10"
+        groups="base.group_system"/>
 </odoo>

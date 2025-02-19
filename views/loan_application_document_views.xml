@@ -59,11 +59,4 @@
             </p>
         </field>
     </record>
-
-    <!-- Menu Item -->
-    <menuitem id="menu_loan_application_document"
-              name="Documents"
-              parent="motorcycle_financing.menu_loan_application_root"
-              action="action_loan_application_document"
-              sequence="20"/>
 </odoo>

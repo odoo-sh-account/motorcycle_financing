@@ -5,7 +5,7 @@
         <field name="name">loan.application.tag.tree</field>
         <field name="model">loan.application.tag</field>
         <field name="arch" type="xml">
-            <list string="Loan Application Tags">
+            <list>
                 <field name="name"/>
                 <field name="color" widget="color_picker"/>
             </list>
@@ -17,7 +17,7 @@
         <field name="name">loan.application.tag.form</field>
         <field name="model">loan.application.tag</field>
         <field name="arch" type="xml">
-            <form string="Loan Application Tag">
+            <form>
                 <sheet>
                     <group>
                         <field name="name"/>
@@ -28,23 +28,18 @@
         </field>
     </record>
 
-    <!-- Action -->
+    <!-- Window Action -->
     <record id="action_loan_application_tag" model="ir.actions.act_window">
         <field name="name">Loan Application Tags</field>
         <field name="res_model">loan.application.tag</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">tree,form</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create your first loan application tag
             </p>
+            <p>
+                Create tags to categorize loan applications.
+            </p>
         </field>
     </record>
-
-    <!-- Menu Item -->
-    <menuitem id="menu_loan_application_tag"
-              name="Tags"
-              parent="menu_loan_application_root"
-              action="action_loan_application_tag"
-              sequence="20"
-              groups="base.group_system"/>
 </odoo>
